@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>Cuaderno de Isla</title>
+<meta name="description" content="Registro de peces, bichos y criaturas marinas de Animal Crossing: New Horizons.">
+<meta name="theme-color" content="#FBF4DF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icono-192.png">
+<link rel="icon" href="icono-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   Cuaderno de Isla — paleta isla desierta
+   Arena, hoja, cielo y ciruela. Todo redondeado.
+   ═══════════════════════════════════════════════ */
+:root{
+  /* fondos */
+  --arena:#FBF4DF;
+  --arena-2:#F0E5C9;
+  --arena-3:#E6D8B4;
+  --nata:#FFFFFF;
+
+  /* tinta */
+  --tinta:#6B563F;
+  --tinta-2:#A8937A;
+
+  /* colores del juego */
+  --hoja:#8FC93A;
+  --hoja-osc:#63992A;
+  --hoja-claro:#E4F2C7;
+  --cielo:#5FC2E0;
+  --cielo-claro:#D4EEF7;
+  --ciruela:#B79CE4;
+  --ciruela-claro:#EAE1FA;
+  --melocoton:#F58C72;
+  --melocoton-claro:#FCDFD6;
+  --sol:#F7C948;
+  --sol-claro:#FDF0C9;
+
+  /* tinte ambiental según la hora */
+  --amb:#D8EEF7;
+
+  --display:"Baloo 2",system-ui,sans-serif;
+  --texto:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+
+  --r-s:12px; --r-m:18px; --r-l:26px;
+  --sombra:0 3px 0 var(--arena-2);
+  --sombra-alta:0 4px 0 var(--arena-2), 0 8px 18px rgba(107,86,63,.09);
+  --tab-h:66px;
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--texto);
+  background:var(--arena);
+  color:var(--tinta);
+  min-height:100svh;
+  overscroll-behavior-y:none;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+#ambiente{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(130% 55% at 50% 0%, var(--amb) 0%, transparent 62%),
+    var(--arena);
+  transition:background 1.2s ease;
+}
+
+button,input,select{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer;padding:0}
+input,select{background:none;border:0;outline:none}
+:focus-visible{outline:3px solid var(--hoja);outline-offset:2px;border-radius:10px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+
+/* etiquetitas */
+.etq{
+  font-family:var(--texto);font-size:11px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--tinta-2);
+}
+
+/* ── Cabecera ───────────────────────────────── */
+header{
+  position:sticky;top:0;z-index:30;
+  padding:calc(env(safe-area-inset-top) + 11px) 17px 11px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:linear-gradient(180deg,var(--arena) 58%,transparent);
+}
+#chip-perfil{
+  display:flex;align-items:center;gap:9px;
+  background:var(--nata);box-shadow:var(--sombra);
+  padding:6px 14px 6px 6px;border-radius:999px;max-width:62vw;
+}
+#chip-perfil .ini{
+  width:28px;height:28px;border-radius:50%;flex:0 0 28px;
+  background:var(--hoja);color:#fff;
+  font-family:var(--display);font-weight:800;font-size:13px;
+  display:grid;place-items:center;
+}
+#chip-perfil .txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14.5px;font-weight:700}
+#chip-perfil .car{color:var(--tinta-2);font-size:11px;flex:0 0 auto}
+#reloj{
+  display:flex;align-items:center;gap:7px;font-weight:800;font-size:14.5px;
+  background:var(--nata);box-shadow:var(--sombra);
+  padding:7px 14px;border-radius:999px;
+}
+#reloj .pt{width:8px;height:8px;border-radius:50%;background:var(--sol)}
+#reloj.editado .pt{background:var(--cielo)}
+
+main{padding:4px 17px calc(var(--tab-h) + env(safe-area-inset-bottom) + 30px)}
+.vista{display:none;animation:sube .3s ease both}
+.vista.on{display:block}
+@keyframes sube{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+h1{
+  font-family:var(--display);font-weight:800;font-size:35px;
+  letter-spacing:-.01em;margin:8px 0 0;line-height:1.1;
+}
+.subt{color:var(--tinta-2);font-size:14.5px;font-weight:600;margin:2px 0 18px}
+.subt b{color:var(--tinta);font-weight:800}
+
+/* ── Tarjeta destacada ──────────────────────── */
+#faltan-hoy{
+  position:relative;overflow:hidden;
+  background:linear-gradient(160deg,var(--sol-claro) 0%,var(--hoja-claro) 100%);
+  border-radius:var(--r-l);padding:20px 20px 19px;margin-bottom:16px;
+  box-shadow:var(--sombra-alta);
+}
+#faltan-hoy .n{
+  font-family:var(--display);font-weight:800;font-size:66px;
+  line-height:.92;color:var(--hoja-osc);display:block;
+}
+#faltan-hoy .d{font-size:15px;font-weight:700;margin-top:7px;max-width:22ch;position:relative}
+#faltan-hoy .hojitas{position:absolute;right:-12px;top:-14px;opacity:.5}
+#faltan-hoy.completo{background:linear-gradient(160deg,var(--cielo-claro) 0%,var(--hoja-claro) 100%)}
+
+/* ── Filtros ────────────────────────────────── */
+.filtros{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.pill{
+  background:var(--nata);box-shadow:var(--sombra);
+  border-radius:999px;padding:9px 16px;font-size:14px;font-weight:700;
+  color:var(--tinta-2);transition:.15s;
+}
+.pill[aria-pressed="true"]{background:var(--hoja);color:#fff;box-shadow:0 3px 0 var(--hoja-osc)}
+.pill:active{transform:translateY(2px);box-shadow:none}
+.pill.mini{padding:7px 13px;font-size:13px}
+
+/* ── Avisos ─────────────────────────────────── */
+.aviso{
+  display:flex;gap:11px;align-items:flex-start;
+  border-radius:var(--r-m);padding:13px 15px;margin-bottom:11px;
+  font-size:14px;font-weight:600;
+  background:var(--melocoton-claro);
+}
+.aviso .ic{flex:0 0 auto;font-size:16px;line-height:1.3}
+.aviso b{font-weight:800}
+.aviso.suave{background:var(--sol-claro)}
+.aviso.calma{background:var(--cielo-claro)}
+
+/* ── Secciones ──────────────────────────────── */
+.seccion{margin:22px 0 0}
+.seccion-cab{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.seccion-cab .linea{flex:1;height:3px;border-radius:9px;background:var(--arena-2)}
+.seccion-cab .cuenta{font-weight:800;font-size:13px;color:var(--tinta-2)}
+.seccion.fish .etq,.seccion.fish .cuenta{color:#3FA3C4}
+.seccion.fish .linea{background:var(--cielo-claro)}
+.seccion.bugs .etq,.seccion.bugs .cuenta{color:var(--hoja-osc)}
+.seccion.bugs .linea{background:var(--hoja-claro)}
+.seccion.sea .etq,.seccion.sea .cuenta{color:#8B6BC9}
+.seccion.sea .linea{background:var(--ciruela-claro)}
+
+/* ── Fila ───────────────────────────────────── */
+.lista{display:flex;flex-direction:column;gap:9px}
+.fila{
+  display:flex;align-items:center;gap:12px;
+  background:var(--nata);box-shadow:var(--sombra);
+  border-radius:var(--r-m);padding:11px 14px;width:100%;transition:.15s;
+}
+.fila:active{transform:translateY(2px);box-shadow:none}
+.fila .marca{
+  flex:0 0 30px;width:30px;height:30px;border-radius:50%;
+  border:2.5px solid var(--arena-2);display:grid;place-items:center;
+  color:transparent;font-size:15px;font-weight:800;transition:.18s;
+}
+.fila.hecho .marca{background:var(--hoja);border-color:var(--hoja);color:#fff;transform:rotate(-8deg)}
+.fila.hecho .nom{color:var(--tinta-2)}
+.fila.hecho{background:#FCFAF2}
+.fila .abrir,.perfil-fila .abrir{display:flex;align-items:center;gap:12px;flex:1;min-width:0;text-align:left}
+.fila .cuerpo,.perfil-fila .cuerpo{flex:1;min-width:0}
+.fila .foto{width:40px;height:40px;flex:0 0 40px;object-fit:contain}
+.fila .nom{font-size:15.5px;font-weight:800;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fila .meta{font-size:12.5px;font-weight:600;color:var(--tinta-2);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fila .der{flex:0 0 auto;max-width:42%;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.fila .precio{font-size:13px;font-weight:800;color:var(--tinta)}
+.fila .precio i{font-style:normal;font-weight:700;font-size:11px;color:var(--tinta-2)}
+
+.tag{
+  font-size:10.5px;font-weight:800;letter-spacing:.05em;
+  text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap;
+}
+.tag.urgente{background:var(--melocoton);color:#fff}
+.tag.ultimo{background:var(--melocoton-claro);color:#C9563A}
+.tag.nuevo{background:var(--sol-claro);color:#B08512}
+.tag.fuera{background:var(--arena-2);color:var(--tinta-2)}
+.tag.viva{background:var(--hoja-claro);color:var(--hoja-osc)}
+
+/* ── Vacío ──────────────────────────────────── */
+.vacio{
+  background:var(--nata);box-shadow:var(--sombra);border-radius:var(--r-l);
+  padding:28px 22px;text-align:center;color:var(--tinta-2);font-size:14.5px;font-weight:600;
+}
+.vacio b{display:block;color:var(--tinta);font-family:var(--display);font-size:21px;font-weight:800;margin-bottom:5px}
+.vacio .cara{font-size:30px;display:block;margin-bottom:6px}
+
+/* ── Buscador y selectores ──────────────────── */
+.buscador{
+  display:flex;align-items:center;gap:10px;
+  background:var(--nata);box-shadow:var(--sombra);
+  border-radius:999px;padding:12px 18px;margin-bottom:14px;
+}
+.buscador input{width:100%;font-size:16px;font-weight:600}
+.buscador input::placeholder{color:var(--tinta-2);font-weight:600}
+.buscador input:focus-visible{outline:none}
+.buscador .lupa{color:var(--tinta-2);flex:0 0 auto;display:grid;place-items:center}
+
+.selector{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:var(--nata);box-shadow:var(--sombra);
+  border-radius:var(--r-m);padding:12px 17px;margin-bottom:9px;
+}
+.selector select{font-size:15.5px;font-weight:700;text-align:right;direction:rtl}
+.selector select option{direction:ltr}
+
+/* ── Bandas de disponibilidad ───────────────── */
+.banda{display:flex;gap:3px;margin-top:9px}
+.banda .s{flex:1;height:26px;border-radius:6px;background:var(--arena-2);position:relative;transition:.2s}
+.banda .s.on{background:var(--sol)}
+.banda.horas .s.on{background:var(--cielo)}
+.banda .s.ahora{box-shadow:0 0 0 2.5px var(--tinta)}
+.banda-eje{display:flex;gap:3px;margin-top:7px}
+.banda-eje span{flex:1;text-align:center;font-size:10px;font-weight:700;color:var(--tinta-2)}
+.banda-eje span.ahora{color:var(--tinta);font-weight:800}
+
+/* ── Ficha ──────────────────────────────────── */
+#velo{
+  position:fixed;inset:0;z-index:40;background:rgba(107,86,63,.35);
+  backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .25s;
+}
+#velo.on{opacity:1;pointer-events:auto}
+#hoja{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;
+  background:var(--arena);
+  border-radius:var(--r-l) var(--r-l) 0 0;
+  padding:10px 20px calc(env(safe-area-inset-bottom) + 24px);
+  max-height:88svh;overflow-y:auto;
+  box-shadow:0 -8px 30px rgba(107,86,63,.16);
+  transform:translateY(101%);transition:transform .3s cubic-bezier(.32,.72,0,1);
+}
+#hoja.on{transform:none}
+#hoja .asa{width:44px;height:5px;border-radius:99px;background:var(--arena-3);margin:0 auto 16px}
+#hoja .titulo{display:flex;align-items:center;gap:14px}
+#hoja .retrato{
+  width:74px;height:74px;flex:0 0 74px;object-fit:contain;
+  background:var(--nata);box-shadow:var(--sombra);border-radius:var(--r-m);padding:5px;
+}
+#hoja h2{font-family:var(--display);font-size:30px;font-weight:800;margin:0;line-height:1.15}
+#hoja .en{font-size:13px;font-weight:700;color:var(--tinta-2);margin:1px 0 0}
+#hoja .estado{margin:13px 0 2px}
+.ficha{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}
+.ficha div{background:var(--nata);box-shadow:var(--sombra);border-radius:var(--r-m);padding:12px 14px}
+.ficha .k{display:block;margin-bottom:2px}
+.ficha .v{font-size:15px;font-weight:800}
+.ficha .v i{font-style:normal;font-size:12px;font-weight:700;color:var(--tinta-2)}
+.ficha .ancho{grid-column:1/-1}
+.bloque{margin-top:20px;background:var(--nata);box-shadow:var(--sombra);border-radius:var(--r-m);padding:14px 15px 12px}
+.bloque > .etq{display:block}
+#btn-marcar{
+  width:100%;margin-top:20px;padding:16px;border-radius:var(--r-m);
+  font-size:16px;font-weight:800;background:var(--hoja);color:#fff;
+  box-shadow:0 4px 0 var(--hoja-osc);
+}
+#btn-marcar:active{transform:translateY(3px);box-shadow:0 1px 0 var(--hoja-osc)}
+#btn-marcar.hecho{background:var(--nata);color:var(--tinta-2);box-shadow:0 4px 0 var(--arena-2)}
+
+/* ── Museo ──────────────────────────────────── */
+.anillos{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.anillo{background:var(--nata);box-shadow:var(--sombra);border-radius:var(--r-m);padding:15px 8px 13px;text-align:center}
+.anillo svg{display:block;margin:0 auto 8px}
+.anillo .n{font-family:var(--display);font-size:16px;font-weight:800}
+.anillo .n small{color:var(--tinta-2);font-weight:700;font-size:12px}
+.barra-total{background:var(--nata);box-shadow:var(--sombra-alta);border-radius:var(--r-l);padding:18px;margin-bottom:16px}
+.barra-total .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.barra-total .pct{font-family:var(--display);font-size:34px;font-weight:800;color:var(--hoja-osc)}
+.barra-total .cuenta{font-weight:800;color:var(--tinta-2);font-size:14px}
+.pista{height:12px;border-radius:99px;background:var(--arena-2);overflow:hidden;display:flex}
+.pista i{display:block;height:100%;transition:width .6s ease}
+
+/* ── Perfiles ───────────────────────────────── */
+.perfil-fila{
+  display:flex;align-items:center;gap:13px;width:100%;
+  background:var(--nata);box-shadow:var(--sombra);
+  border-radius:var(--r-m);padding:13px 15px;margin-bottom:9px;
+}
+.perfil-fila.activo{box-shadow:0 3px 0 var(--hoja-osc);background:var(--hoja-claro)}
+.perfil-fila .ini{
+  width:44px;height:44px;flex:0 0 44px;border-radius:50%;
+  background:var(--arena-2);color:var(--tinta);
+  font-family:var(--display);font-weight:800;font-size:17px;display:grid;place-items:center;
+}
+.perfil-fila.activo .ini{background:var(--hoja);color:#fff}
+.perfil-fila .nom{font-size:16.5px;font-weight:800;display:block}
+.perfil-fila .meta{font-size:12.5px;font-weight:600;color:var(--tinta-2);display:block}
+.btn-fantasma{
+  width:100%;padding:15px;border-radius:var(--r-m);
+  background:var(--nata);box-shadow:var(--sombra);
+  color:var(--tinta-2);font-size:15px;font-weight:800;margin-top:5px;
+}
+.btn-fantasma:active{transform:translateY(2px);box-shadow:none}
+.btn-solido{
+  width:100%;padding:16px;border-radius:var(--r-m);background:var(--hoja);color:#fff;
+  font-size:16px;font-weight:800;box-shadow:0 4px 0 var(--hoja-osc);
+}
+.btn-solido:active{transform:translateY(3px);box-shadow:0 1px 0 var(--hoja-osc)}
+.btn-texto{color:var(--tinta-2);font-size:14px;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.campo{background:var(--nata);box-shadow:var(--sombra);border-radius:var(--r-m);padding:13px 17px;margin-bottom:10px}
+.campo input{width:100%;font-size:16px;font-weight:700}
+.campo input::placeholder{color:var(--tinta-2);font-weight:600}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.opcion{
+  padding:15px 10px;border-radius:var(--r-m);background:var(--nata);box-shadow:var(--sombra);
+  text-align:center;font-size:15px;font-weight:800;color:var(--tinta-2);
+}
+.opcion[aria-pressed="true"]{background:var(--hoja-claro);color:var(--hoja-osc);box-shadow:0 3px 0 var(--hoja)}
+.opcion small{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:3px;opacity:.75}
+
+/* ── Pestañas ───────────────────────────────── */
+nav{
+  position:fixed;left:0;right:0;bottom:0;z-index:35;
+  height:calc(var(--tab-h) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  display:grid;grid-template-columns:repeat(4,1fr);
+  background:var(--nata);
+  box-shadow:0 -3px 0 var(--arena-2),0 -10px 24px rgba(107,86,63,.07);
+}
+nav button{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  color:var(--tinta-2);font-size:10.5px;font-weight:800;letter-spacing:.02em;transition:.15s;
+}
+nav button[aria-selected="true"]{color:var(--hoja-osc)}
+nav button svg{width:23px;height:23px;stroke-width:2;transition:transform .2s}
+nav button[aria-selected="true"] svg{transform:translateY(-2px) scale(1.08)}
+
+.oculto{display:none !important}
+</style>
+</head>
+<body>
+<div id="ambiente"></div>
+
+<header>
+  <button id="chip-perfil" aria-label="Cambiar de perfil">
+    <span class="ini">—</span>
+    <span class="txt">Sin perfil</span>
+    <span class="car">▾</span>
+  </button>
+  <div id="reloj"><span class="pt"></span><span class="t">--:--</span></div>
+</header>
+
+<main>
+  <!-- ═══ AHORA ═══ -->
+  <section id="v-ahora" class="vista on">
+    <h1>Ahora mismo</h1>
+    <p class="subt" id="ahora-sub"></p>
+
+    <div id="faltan-hoy">
+      <svg class="hojitas" width="118" height="96" viewBox="0 0 118 96" fill="none" aria-hidden="true">
+        <path d="M74 78C74 50 90 30 116 24c4 30-12 54-42 58z" fill="#8FC93A" opacity=".55"/>
+        <path d="M52 88C46 62 56 38 79 26c10 28 0 55-27 66z" fill="#63992A" opacity=".4"/>
+      </svg>
+      <span class="n">0</span>
+      <div class="d">criaturas disponibles que aún no tienes</div>
+    </div>
+
+    <div class="filtros">
+      <button class="pill" data-f-ahora="faltan" aria-pressed="true">Me faltan</button>
+      <button class="pill" data-f-ahora="todo" aria-pressed="false">Todo lo disponible</button>
+      <button class="pill mini" id="btn-momento" aria-pressed="false">Otro momento</button>
+    </div>
+
+    <div id="panel-momento" class="oculto">
+      <div class="selector"><span class="etq">Mes</span><select id="sel-mes"></select></div>
+      <div class="selector"><span class="etq">Hora</span><select id="sel-hora"></select></div>
+      <button class="btn-texto" id="btn-reset-momento" style="margin:4px 0 16px">Volver a la hora real</button>
+    </div>
+
+    <div id="avisos"></div>
+    <div id="ahora-listas"></div>
+  </section>
+
+  <!-- ═══ CATÁLOGO ═══ -->
+  <section id="v-catalogo" class="vista">
+    <h1>Catálogo</h1>
+    <p class="subt">200 criaturas. Busca por nombre en español o inglés.</p>
+
+    <div class="buscador">
+      <span class="lupa" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      </span>
+      <input id="q" type="search" placeholder="Celacanto, escarabajo, pulpo…" autocomplete="off" enterkeyhint="search">
+    </div>
+
+    <div class="filtros">
+      <button class="pill" data-cat="todos" aria-pressed="true">Todos</button>
+      <button class="pill" data-cat="fish" aria-pressed="false">Peces</button>
+      <button class="pill" data-cat="bugs" aria-pressed="false">Bichos</button>
+      <button class="pill" data-cat="sea" aria-pressed="false">Marinas</button>
+    </div>
+    <div class="filtros">
+      <button class="pill mini" data-estado="todos" aria-pressed="true">Sin filtro</button>
+      <button class="pill mini" data-estado="faltan" aria-pressed="false">Me faltan</button>
+      <button class="pill mini" data-estado="tengo" aria-pressed="false">Capturados</button>
+      <button class="pill mini" data-estado="ahora" aria-pressed="false">Disponibles ahora</button>
+    </div>
+
+    <div id="catalogo-listas"></div>
+  </section>
+
+  <!-- ═══ MUSEO ═══ -->
+  <section id="v-museo" class="vista">
+    <h1>Museo</h1>
+    <p class="subt" id="museo-sub"></p>
+
+    <div class="barra-total">
+      <div class="top">
+        <span class="pct" id="pct-total">0%</span>
+        <span class="cuenta" id="txt-total">0 / 200</span>
+      </div>
+      <div class="pista" id="pista-total"></div>
+    </div>
+
+    <div class="anillos" id="anillos"></div>
+
+    <div class="seccion">
+      <div class="seccion-cab">
+        <span class="etq">Te faltan este mes</span>
+        <span class="linea"></span>
+        <span class="cuenta" id="cuenta-mes">0</span>
+      </div>
+      <p class="subt" style="margin:-4px 0 12px">Aparecen en algún momento del mes actual. Si no las cazas ahora, puede que toque esperar un año.</p>
+      <div id="museo-listas"></div>
+    </div>
+
+    <div class="seccion">
+      <div class="seccion-cab"><span class="etq">Copia de seguridad</span><span class="linea"></span></div>
+      <p class="subt" style="margin:-4px 0 12px">Tu progreso vive solo en este teléfono. Descarga el archivo si vas a cambiar de dispositivo o a borrar los datos del navegador.</p>
+      <button class="btn-fantasma" id="btn-exportar">Descargar mi progreso</button>
+      <button class="btn-fantasma" id="btn-importar">Restaurar desde un archivo</button>
+      <input type="file" id="file-importar" accept="application/json" class="oculto">
+    </div>
+  </section>
+
+  <!-- ═══ PERFILES ═══ -->
+  <section id="v-perfiles" class="vista">
+    <h1>Perfiles</h1>
+    <p class="subt">Una isla por persona. Cada perfil guarda su hemisferio y su propio registro.</p>
+    <div id="lista-perfiles"></div>
+    <button class="btn-fantasma" id="btn-nuevo-perfil">+ Crear un perfil</button>
+
+    <div id="form-perfil" class="oculto" style="margin-top:22px">
+      <div class="seccion-cab"><span class="etq" id="form-titulo">Nuevo perfil</span><span class="linea"></span></div>
+      <div class="campo"><input id="in-nombre" placeholder="Nombre de tu personaje" maxlength="24" autocomplete="off"></div>
+      <div class="dos">
+        <button class="opcion" data-hemi="N" aria-pressed="true">Norte<small>Ene = invierno</small></button>
+        <button class="opcion" data-hemi="S" aria-pressed="false">Sur<small>Ene = verano</small></button>
+      </div>
+      <button class="btn-solido" id="btn-guardar-perfil">Guardar perfil</button>
+      <div style="text-align:center;margin-top:16px;display:flex;gap:20px;justify-content:center">
+        <button class="btn-texto" id="btn-cancelar-perfil">Cancelar</button>
+        <button class="btn-texto" id="btn-borrar-perfil" style="color:#D2553A">Borrar este perfil</button>
+      </div>
+    </div>
+
+    <div class="seccion">
+      <div class="seccion-cab"><span class="etq">Sobre los datos</span><span class="linea"></span></div>
+      <p class="subt">Las horas y los meses vienen de la comunidad de <em>New Horizons</em>. Un par de peces (salmón japonés y salvelino) cambian de horario según el mes: la app muestra la unión de sus dos ventanas.</p>
+    </div>
+  </section>
+</main>
+
+<nav role="tablist">
+  <button role="tab" data-vista="ahora" aria-selected="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+    Ahora
+  </button>
+  <button role="tab" data-vista="catalogo" aria-selected="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 015.5 4H10a2 2 0 012 2v13a2 2 0 00-2-2H5.5A1.5 1.5 0 014 15.5z"/><path d="M20 5.5A1.5 1.5 0 0018.5 4H14a2 2 0 00-2 2v13a2 2 0 012-2h4.5a1.5 1.5 0 001.5-1.5z"/></svg>
+    Catálogo
+  </button>
+  <button role="tab" data-vista="museo" aria-selected="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 4l9 5.5"/><path d="M5.5 10.5v7M10 10.5v7M14 10.5v7M18.5 10.5v7"/><path d="M3.5 20.5h17"/></svg>
+    Museo
+  </button>
+  <button role="tab" data-vista="perfiles" aria-selected="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.8 20a7.2 7.2 0 0114.4 0"/></svg>
+    Perfil
+  </button>
+</nav>
+
+<div id="velo"></div>
+<aside id="hoja" role="dialog" aria-modal="true" aria-label="Ficha de la criatura"></aside>
+
+<script>
+// Datos de Animal Crossing: New Horizons.
+// Meses y horas van codificados como máscaras de bits: mes 1 = bit 0, hora 0 = bit 0.
+// N = meses hemisferio norte, S = meses hemisferio sur, h = horas, p = precio,
+// c = precio de C.J./Flick, l = lugar, s = sombra, v = velocidad, r = rareza.
+const DATOS = {
+  "fish": [
+    {"i":1,"n":"Amarguillo","e":"Bitterling","N":3079,"S":496,"h":16777215,"p":900,"f":"bitterling","l":"Río","s":"Muy pequeña (1)","r":"Común","c":1350},
+    {"i":2,"n":"Cacho","e":"Pale chub","N":4095,"S":4095,"h":65024,"p":200,"f":"pale_chub","l":"Río","s":"Muy pequeña (1)","r":"Común","c":300},
+    {"i":3,"n":"Carpín","e":"Crucian carp","N":4095,"S":4095,"h":16777215,"p":160,"f":"crucian_carp","l":"Río","s":"Pequeña (2)","r":"Común","c":240},
+    {"i":4,"n":"Leucisco","e":"Dace","N":4095,"S":4095,"h":16712191,"p":240,"f":"dace","l":"Río","s":"Mediana (3)","r":"Común","c":360},
+    {"i":5,"n":"Carpa","e":"Carp","N":4095,"S":4095,"h":16777215,"p":300,"f":"carp","l":"Estanque","s":"Mediana (4)","r":"Común","c":450},
+    {"i":6,"n":"Koi","e":"Koi","N":4095,"S":4095,"h":16712191,"p":4000,"f":"koi","l":"Estanque","s":"Mediana (4)","r":"Poco común","c":6000},
+    {"i":7,"n":"Pez dorado","e":"Goldfish","N":4095,"S":4095,"h":16777215,"p":1300,"f":"goldfish","l":"Estanque","s":"Muy pequeña (1)","r":"Común","c":1950},
+    {"i":8,"n":"Pez telescopio","e":"Pop-eyed goldfish","N":4095,"S":4095,"h":65024,"p":1300,"f":"pop-eyed_goldfish","l":"Estanque","s":"Muy pequeña (1)","r":"Común","c":1950},
+    {"i":9,"n":"Ranchú","e":"Ranchu goldfish","N":4095,"S":4095,"h":65024,"p":4500,"f":"ranchu_goldfish","l":"Estanque","s":"Pequeña (2)","r":"Poco común","c":6750},
+    {"i":10,"n":"Killi","e":"Killifish","N":248,"S":3587,"h":16777215,"p":300,"f":"killifish","l":"Estanque","s":"Muy pequeña (1)","r":"Común","c":450},
+    {"i":11,"n":"Cangrejo de río","e":"Crawfish","N":504,"S":3591,"h":16777215,"p":200,"f":"crawfish","l":"Estanque","s":"Pequeña (2)","r":"Común","c":300},
+    {"i":12,"n":"Tortuga caparazón blando","e":"Soft-shelled turtle","N":384,"S":6,"h":16712191,"p":3750,"f":"soft-shelled_turtle","l":"Río","s":"Mediana (4)","r":"Poco común","c":5625},
+    {"i":13,"n":"Tortuga mordedora","e":"Snapping turtle","N":1016,"S":3599,"h":14680079,"p":5000,"f":"snapping_turtle","l":"Río","s":"Grande (5)","r":"Común","c":7500},
+    {"i":14,"n":"Renacuajo","e":"Tadpole","N":124,"S":3841,"h":16777215,"p":100,"f":"tadpole","l":"Estanque","s":"Muy pequeña (1)","r":"Común","c":150},
+    {"i":15,"n":"Rana","e":"Frog","N":240,"S":3075,"h":16777215,"p":120,"f":"frog","l":"Estanque","s":"Pequeña (2)","r":"Común","c":180},
+    {"i":16,"n":"Gobio de río","e":"Freshwater goby","N":4095,"S":4095,"h":16712191,"p":400,"f":"freshwater_goby","l":"Río","s":"Pequeña (2)","r":"Común","c":600},
+    {"i":17,"n":"Locha","e":"Loach","N":28,"S":1792,"h":16777215,"p":400,"f":"loach","l":"Río","s":"Pequeña (2)","r":"Común","c":600},
+    {"i":18,"n":"Siluro","e":"Catfish","N":1008,"S":3087,"h":16712191,"p":800,"f":"catfish","l":"Estanque","s":"Mediana (4)","r":"Común","c":1200},
+    {"i":19,"n":"Pez cabeza de serpiente","e":"Giant snakehead","N":224,"S":2051,"h":65024,"p":5500,"f":"giant_snakehead","l":"Estanque","s":"Grande (5)","r":"Rara","c":8250},
+    {"i":20,"n":"Pez sol","e":"Bluegill","N":4095,"S":4095,"h":65024,"p":180,"f":"bluegill","l":"Río","s":"Pequeña (2)","r":"Común","c":270},
+    {"i":21,"n":"Perca amarilla","e":"Yellow perch","N":3591,"S":504,"h":16777215,"p":300,"f":"yellow_perch","l":"Río","s":"Mediana (3)","r":"Común","c":450},
+    {"i":22,"n":"Perca","e":"Black bass","N":4095,"S":4095,"h":16777215,"p":400,"f":"black_bass","l":"Río","s":"Mediana (4)","r":"Común","c":600},
+    {"i":23,"n":"Tilapia","e":"Tilapia","N":992,"S":2063,"h":16777215,"p":800,"f":"tilapia","l":"Río","s":"Mediana (3)","r":"Común","c":1200},
+    {"i":24,"n":"Lucio","e":"Pike","N":3840,"S":60,"h":16777215,"p":1800,"f":"pike","l":"Río","s":"Grande (5)","r":"Poco común","c":2700},
+    {"i":25,"n":"Eperlano","e":"Pond smelt","N":2051,"S":224,"h":16777215,"p":400,"f":"pond_smelt","l":"Río","s":"Pequeña (2)","r":"Común","c":600},
+    {"i":26,"n":"Ayu","e":"Sweetfish","N":448,"S":7,"h":16777215,"p":900,"f":"sweetfish","l":"Río","s":"Mediana (3)","r":"Común","c":1350},
+    {"i":27,"n":"Salmón japonés","e":"Cherry salmon","N":1852,"S":3868,"h":16712191,"p":1000,"f":"cherry_salmon","l":"Río (cima del acantilado)","s":"Mediana (3)","r":"Común","c":1500},
+    {"i":28,"n":"Trucha","e":"Char","N":1852,"S":3868,"h":16712191,"p":3800,"f":"char","l":"Río (acantilado) y estanque","s":"Mediana (3)","r":"Poco común","c":5700},
+    {"i":29,"n":"Trucha dorada","e":"Golden trout","N":1820,"S":1820,"h":16712191,"p":15000,"f":"golden_trout","l":"Río (cima del acantilado)","s":"Mediana (3)","r":"Muy rara","c":22500},
+    {"i":30,"n":"Taimén","e":"Stringfish","N":2055,"S":480,"h":16712191,"p":15000,"f":"stringfish","l":"Río (cima del acantilado)","s":"Grande (5)","r":"Muy rara","c":22500},
+    {"i":31,"n":"Salmón","e":"Salmon","N":256,"S":4,"h":16777215,"p":700,"f":"salmon","l":"Desembocadura del río","s":"Mediana (4)","r":"Común","c":1050},
+    {"i":32,"n":"Salmón real","e":"King salmon","N":256,"S":4,"h":16777215,"p":1800,"f":"king_salmon","l":"Desembocadura del río","s":"Muy grande (6)","r":"Poco común","c":2700},
+    {"i":33,"n":"Cangrejo de Shanghái","e":"Mitten crab","N":1792,"S":28,"h":16712191,"p":2000,"f":"mitten_crab","l":"Río","s":"Pequeña (2)","r":"Poco común","c":3000},
+    {"i":34,"n":"Gupi","e":"Guppy","N":2040,"S":3615,"h":65024,"p":1300,"f":"guppy","l":"Río","s":"Muy pequeña (1)","r":"Común","c":1950},
+    {"i":35,"n":"Pez doctor","e":"Nibble fish","N":496,"S":3079,"h":65024,"p":1500,"f":"nibble_fish","l":"Río","s":"Muy pequeña (1)","r":"Poco común","c":2250},
+    {"i":36,"n":"Pez ángel","e":"Angelfish","N":1008,"S":3087,"h":16712191,"p":3000,"f":"angelfish","l":"Río","s":"Pequeña (2)","r":"Poco común","c":4500},
+    {"i":37,"n":"Betta","e":"Betta","N":1008,"S":3087,"h":65024,"p":2500,"f":"betta","l":"Río","s":"Pequeña (2)","r":"Poco común","c":3750},
+    {"i":38,"n":"Tetra neón","e":"Neon tetra","N":2040,"S":3615,"h":65024,"p":500,"f":"neon_tetra","l":"Río","s":"Muy pequeña (1)","r":"Común","c":750},
+    {"i":39,"n":"Pez arcoíris","e":"Rainbowfish","N":1008,"S":3087,"h":65024,"p":800,"f":"rainbowfish","l":"Río","s":"Muy pequeña (1)","r":"Común","c":1200},
+    {"i":40,"n":"Piraña","e":"Piranha","N":480,"S":2055,"h":14745103,"p":2500,"f":"piranha","l":"Río","s":"Pequeña (2)","r":"Rara","c":3750},
+    {"i":41,"n":"Arowana","e":"Arowana","N":480,"S":2055,"h":16712191,"p":10000,"f":"arowana","l":"Río","s":"Mediana (4)","r":"Rara","c":15000},
+    {"i":42,"n":"Dorado","e":"Dorado","N":480,"S":2055,"h":2097136,"p":15000,"f":"dorado","l":"Río","s":"Grande (5)","r":"Muy rara","c":22500},
+    {"i":43,"n":"Pez caimán","e":"Gar","N":480,"S":2055,"h":16712191,"p":6000,"f":"gar","l":"Estanque","s":"Grande (5)","r":"Rara","c":9000},
+    {"i":44,"n":"Pirarucú","e":"Arapaima","N":480,"S":2055,"h":16712191,"p":10000,"f":"arapaima","l":"Río","s":"Muy grande (6)","r":"Rara","c":15000},
+    {"i":45,"n":"Bichir ensillado","e":"Saddled bichir","N":480,"S":2055,"h":14680079,"p":4000,"f":"saddled_bichir","l":"Río","s":"Mediana (4)","r":"Poco común","c":6000},
+    {"i":46,"n":"Esturión","e":"Sturgeon","N":3847,"S":508,"h":16777215,"p":10000,"f":"sturgeon","l":"Desembocadura del río","s":"Muy grande (6)","r":"Poco común","c":15000},
+    {"i":47,"n":"Mariposa marina","e":"Sea butterfly","N":2055,"S":480,"h":16777215,"p":1000,"f":"sea_butterfly","l":"Mar","s":"Muy pequeña (1)","r":"Común","c":1500},
+    {"i":48,"n":"Caballito de mar","e":"Sea horse","N":2040,"S":3615,"h":16777215,"p":1100,"f":"sea_horse","l":"Mar","s":"Muy pequeña (1)","r":"Común","c":1650},
+    {"i":49,"n":"Pez payaso","e":"Clown fish","N":504,"S":3591,"h":16777215,"p":650,"f":"clownfish","l":"Mar","s":"Muy pequeña (1)","r":"Común","c":975},
+    {"i":50,"n":"Pez cirujano","e":"Surgeonfish","N":504,"S":3591,"h":16777215,"p":1000,"f":"surgeonfish","l":"Mar","s":"Pequeña (2)","r":"Común","c":1500},
+    {"i":51,"n":"Pez mariposa","e":"Butterfly fish","N":504,"S":3591,"h":16777215,"p":1000,"f":"butterfly_fish","l":"Mar","s":"Pequeña (2)","r":"Común","c":1500},
+    {"i":52,"n":"Pez napoleón","e":"Napoleonfish","N":192,"S":3,"h":2097136,"p":10000,"f":"napoleonfish","l":"Mar","s":"Muy grande (6)","r":"Rara","c":15000},
+    {"i":53,"n":"Pez león","e":"Zebra turkeyfish","N":2040,"S":3615,"h":16777215,"p":500,"f":"zebra_turkeyfish","l":"Mar","s":"Mediana (3)","r":"Común","c":750},
+    {"i":54,"n":"Pez globo","e":"Blowfish","N":3075,"S":240,"h":14680079,"p":5000,"f":"blowfish","l":"Mar","s":"Mediana (3)","r":"Poco común","c":7500},
+    {"i":55,"n":"Pez erizo","e":"Puffer fish","N":448,"S":7,"h":16777215,"p":250,"f":"puffer_fish","l":"Mar","s":"Mediana (3)","r":"Común","c":375},
+    {"i":56,"n":"Boquerón","e":"Anchovy","N":4095,"S":4095,"h":2097136,"p":200,"f":"anchovy","l":"Mar","s":"Pequeña (2)","r":"Común","c":300},
+    {"i":57,"n":"Jurel","e":"Horse mackerel","N":4095,"S":4095,"h":16777215,"p":150,"f":"horse_mackerel","l":"Mar","s":"Pequeña (2)","r":"Común","c":225},
+    {"i":58,"n":"Dorada japonesa","e":"Barred knifejaw","N":2044,"S":3871,"h":16777215,"p":5000,"f":"barred_knifejaw","l":"Mar","s":"Mediana (3)","r":"Poco común","c":7500},
+    {"i":59,"n":"Lubina","e":"Sea bass","N":4095,"S":4095,"h":16777215,"p":400,"f":"sea_bass","l":"Mar","s":"Grande (5)","r":"Común","c":600},
+    {"i":60,"n":"Pargo rojo","e":"Red snapper","N":4095,"S":4095,"h":16777215,"p":3000,"f":"red_snapper","l":"Mar","s":"Mediana (4)","r":"Común","c":4500},
+    {"i":61,"n":"Gallo","e":"Dab","N":3599,"S":1016,"h":16777215,"p":300,"f":"dab","l":"Mar","s":"Mediana (3)","r":"Común","c":450},
+    {"i":62,"n":"Rodaballo","e":"Olive flounder","N":4095,"S":4095,"h":16777215,"p":800,"f":"olive_flounder","l":"Mar","s":"Grande (5)","r":"Común","c":1200},
+    {"i":63,"n":"Calamar","e":"Squid","N":2303,"S":4067,"h":16777215,"p":500,"f":"squid","l":"Mar","s":"Mediana (3)","r":"Común","c":750},
+    {"i":64,"n":"Morena","e":"Moray eel","N":896,"S":14,"h":16777215,"p":2000,"f":"moray_eel","l":"Mar","s":"Alargada y fina","r":"Poco común","c":3000},
+    {"i":65,"n":"Anguila de listón azul","e":"Ribbon eel","N":992,"S":2063,"h":16777215,"p":600,"f":"ribbon_eel","l":"Mar","s":"Alargada y fina","r":"Común","c":900},
+    {"i":66,"n":"Atún","e":"Tuna","N":3087,"S":1008,"h":16777215,"p":7000,"f":"tuna","l":"Muelle","s":"Muy grande (6)","r":"Rara","c":10500},
+    {"i":67,"n":"Pez espada","e":"Blue marlin","N":3535,"S":1015,"h":16777215,"p":10000,"f":"blue_marlin","l":"Muelle","s":"Muy grande (6)","r":"Rara","c":15000},
+    {"i":68,"n":"Jurel gigante","e":"Giant trevally","N":1008,"S":3087,"h":16777215,"p":4500,"f":"giant_trevally","l":"Muelle","s":"Grande (5)","r":"Poco común","c":6750},
+    {"i":69,"n":"Lampuga","e":"Mahi-mahi","N":1008,"S":3087,"h":16777215,"p":6000,"f":"mahi-mahi","l":"Muelle","s":"Grande (5)","r":"Rara","c":9000},
+    {"i":70,"n":"Pez luna","e":"Ocean sunfish","N":448,"S":7,"h":2097136,"p":4000,"f":"ocean_sunfish","l":"Mar","s":"Muy grande con aleta (6)","r":"Poco común","c":6000},
+    {"i":71,"n":"Raya","e":"Ray","N":1920,"S":30,"h":2097136,"p":3000,"f":"ray","l":"Mar","s":"Grande (5)","r":"Poco común","c":4500},
+    {"i":72,"n":"Pez sierra","e":"Saw shark","N":480,"S":2055,"h":16712191,"p":12000,"f":"saw_shark","l":"Mar","s":"Muy grande con aleta (6)","r":"Rara","c":18000},
+    {"i":73,"n":"Pez martillo","e":"Hammerhead shark","N":480,"S":2055,"h":16712191,"p":8000,"f":"hammerhead_shark","l":"Mar","s":"Muy grande con aleta (6)","r":"Poco común","c":12000},
+    {"i":74,"n":"Tiburón","e":"Great white shark","N":480,"S":2055,"h":16712191,"p":15000,"f":"great_white_shark","l":"Mar","s":"Muy grande con aleta (6)","r":"Rara","c":22500},
+    {"i":75,"n":"Tiburón ballena","e":"Whale shark","N":480,"S":2055,"h":16777215,"p":13000,"f":"whale_shark","l":"Mar","s":"Muy grande con aleta (6)","r":"Rara","c":19500},
+    {"i":76,"n":"Rémora","e":"Suckerfish","N":480,"S":2055,"h":16777215,"p":1500,"f":"suckerfish","l":"Mar","s":"Mediana con aleta (4)","r":"Poco común","c":2250},
+    {"i":77,"n":"Pez balón","e":"Football fish","N":3079,"S":496,"h":16712191,"p":2500,"f":"football_fish","l":"Mar","s":"Mediana (4)","r":"Poco común","c":3750},
+    {"i":78,"n":"Pez remo","e":"Oarfish","N":2079,"S":2016,"h":16777215,"p":9000,"f":"oarfish","l":"Mar","s":"Muy grande (6)","r":"Rara","c":13500},
+    {"i":79,"n":"Pez cabeza transparente","e":"Barreleye","N":4095,"S":4095,"h":14680079,"p":15000,"f":"barreleye","l":"Mar","s":"Pequeña (2)","r":"Muy rara","c":22500},
+    {"i":80,"n":"Celacanto","e":"Coelacanth","N":4095,"S":4095,"h":16777215,"p":15000,"f":"coelacanth","l":"Mar (con lluvia o nieve)","s":"Muy grande (6)","r":"Muy rara","c":22500},
+  ],
+  "bugs": [
+    {"i":1,"n":"Mariposa común","e":"Common butterfly","N":3903,"S":4092,"h":524272,"p":160,"f":"common_butterfly","l":"Volando","r":"Común","c":240},
+    {"i":2,"n":"Mariposa colias","e":"Yellow butterfly","N":828,"S":3852,"h":524272,"p":160,"f":"yellow_butterfly","l":"Volando","r":"Común","c":240},
+    {"i":3,"n":"Mariposa tigre","e":"Tiger butterfly","N":508,"S":3847,"h":524272,"p":240,"f":"tiger_butterfly","l":"Volando","r":"Común","c":360},
+    {"i":4,"n":"Mariposa bianor","e":"Peacock butterfly","N":60,"S":3840,"h":524272,"p":2500,"f":"peacock_butterfly","l":"Volando cerca de flores híbridas","r":"Poco común","c":3750},
+    {"i":5,"n":"Mariposa triángulo azul","e":"Common bluebottle","N":248,"S":3843,"h":524272,"p":300,"f":"common_bluebottle","l":"Volando","r":"Común","c":450},
+    {"i":6,"n":"Mariposa cometa de papel","e":"Paper kite butterfly","N":4095,"S":4095,"h":524032,"p":1000,"f":"paper_kite_butterfly","n2":"Mariposa papel de arroz","l":"Volando","r":"Común","c":1500},
+    {"i":7,"n":"Marip. emperador japonés","e":"Great purple emperor","N":240,"S":3075,"h":524272,"p":3000,"f":"great_purple_emperor","l":"Volando","r":"Rara","c":4500},
+    {"i":8,"n":"Mariposa monarca","e":"Monarch butterfly","N":1792,"S":28,"h":131056,"p":140,"f":"monarch_butterfly","l":"Volando","r":"Común","c":210},
+    {"i":9,"n":"Mariposa celeste","e":"Emperor butterfly","N":2535,"S":2535,"h":16646399,"p":4000,"f":"emperor_butterfly","l":"Volando","r":"Poco común","c":6000},
+    {"i":10,"n":"Mariposa narciso","e":"Agrias butterfly","N":504,"S":3591,"h":130816,"p":3000,"f":"agrias_butterfly","l":"Volando","r":"Poco común","c":4500},
+    {"i":11,"n":"Mariposa alas de Brooke","e":"Rajah Brooke's birdwing","N":2555,"S":3815,"h":130816,"p":2500,"f":"rajah_brookes_birdwing","l":"Volando","r":"Poco común","c":3750},
+    {"i":12,"n":"Mariposa alas de pájaro","e":"Queen Alexandra's birdwing","N":496,"S":3079,"h":65280,"p":4000,"f":"queen_alexandras_birdwing","l":"Volando","r":"Rara","c":6000},
+    {"i":13,"n":"Polilla","e":"Moth","N":4095,"S":4095,"h":16252943,"p":130,"f":"moth","l":"Volando junto a las luces","r":"Común","c":195},
+    {"i":14,"n":"Polilla atlas","e":"Atlas moth","N":504,"S":3591,"h":16252943,"p":3000,"f":"atlas_moth","l":"En los árboles","r":"Poco común","c":4500},
+    {"i":15,"n":"Polilla crepuscular","e":"Madagascan sunset moth","N":504,"S":3591,"h":65280,"p":2500,"f":"madagascan_sunset_moth","l":"Volando","r":"Poco común","c":3750},
+    {"i":16,"n":"Langosta alargada","e":"Long locust","N":2040,"S":3615,"h":524032,"p":200,"f":"long_locust","l":"En el suelo","r":"Común","c":300},
+    {"i":17,"n":"Langosta migratoria","e":"Migratory locust","N":1920,"S":30,"h":524032,"p":600,"f":"migratory_locust","l":"En el suelo","r":"Poco común","c":900},
+    {"i":18,"n":"Langosta","e":"Rice grasshopper","N":1920,"S":30,"h":524032,"p":400,"f":"rice_grasshopper","l":"En el suelo","r":"Común","c":600},
+    {"i":19,"n":"Saltamontes","e":"Grasshopper","N":448,"S":7,"h":130816,"p":160,"f":"grasshopper","l":"En el suelo","r":"Común","c":240},
+    {"i":20,"n":"Grillo común","e":"Cricket","N":1792,"S":28,"h":16646399,"p":130,"f":"cricket","l":"En el suelo","r":"Común","c":195},
+    {"i":21,"n":"Grillo campana","e":"Bell cricket","N":768,"S":12,"h":16646399,"p":430,"f":"bell_cricket","l":"En el suelo","r":"Común","c":645},
+    {"i":22,"n":"Mantis religiosa","e":"Mantis","N":2044,"S":3871,"h":130816,"p":430,"f":"mantis","l":"En las flores","r":"Común","c":645},
+    {"i":23,"n":"Mantis orquídea","e":"Orchid mantis","N":2044,"S":3871,"h":130816,"p":2400,"f":"orchid_mantis","l":"En flores blancas","r":"Poco común","c":3600},
+    {"i":24,"n":"Abeja melífera","e":"Honeybee","N":124,"S":3841,"h":130816,"p":200,"f":"honeybee","l":"Volando","r":"Común","c":300},
+    {"i":25,"n":"Avispa","e":"Wasp","N":4095,"S":4095,"h":16777215,"p":2500,"f":"wasp","l":"Al sacudir árboles","r":"Común","c":3750},
+    {"i":26,"n":"Cigarra marrón","e":"Brown cicada","N":192,"S":3,"h":130816,"p":250,"f":"brown_cicada","l":"En los árboles","r":"Común","c":375},
+    {"i":27,"n":"Cigarra oriental","e":"Robust cicada","N":192,"S":3,"h":130816,"p":300,"f":"robust_cicada","l":"En los árboles","r":"Común","c":450},
+    {"i":28,"n":"Cigarra gigante","e":"Giant cicada","N":192,"S":3,"h":130816,"p":500,"f":"giant_cicada","l":"En los árboles","r":"Poco común","c":750},
+    {"i":29,"n":"Cigarra común","e":"Walker cicada","N":384,"S":6,"h":130816,"p":400,"f":"walker_cicada","l":"En los árboles","r":"Común","c":600},
+    {"i":30,"n":"Cigarrilla","e":"Evening cicada","N":192,"S":3,"h":458992,"p":550,"f":"evening_cicada","n2":"Cigarra","l":"En los árboles","r":"Común","c":825},
+    {"i":31,"n":"Muda de cigarra","e":"Cicada shell","N":192,"S":3,"h":16777215,"p":10,"f":"cicada_shell","n2":"Carcasa de cigarra","l":"En los árboles","r":"Rara","c":15},
+    {"i":32,"n":"Libélula roja","e":"Red dragonfly","N":768,"S":12,"h":524032,"p":180,"f":"red_dragonfly","l":"Volando","r":"Común","c":270},
+    {"i":33,"n":"Libélula caballito del diablo","e":"Darner dragonfly","N":1016,"S":3599,"h":130816,"p":230,"f":"darner_dragonfly","l":"Volando","r":"Común","c":345},
+    {"i":34,"n":"Libélula tigre","e":"Banded dragonfly","N":1008,"S":3087,"h":130816,"p":4500,"f":"banded_dragonfly","l":"Volando","r":"Rara","c":6750},
+    {"i":35,"n":"Libélula damisela","e":"Damselfly","N":3075,"S":240,"h":16777215,"p":500,"f":"damselfly","l":"Volando","r":"Común","c":750},
+    {"i":36,"n":"Luciérnaga","e":"Firefly","N":32,"S":2048,"h":16252943,"p":300,"f":"firefly","l":"Volando cerca del agua","r":"Común","c":450},
+    {"i":37,"n":"Grillo cebollero","e":"Mole cricket","N":3103,"S":2032,"h":16777215,"p":500,"f":"mole_cricket","l":"Bajo tierra","r":"Común","c":750},
+    {"i":38,"n":"Zapatero","e":"Pondskater","N":496,"S":3079,"h":524032,"p":130,"f":"pondskater","l":"En estanques y ríos","r":"Común","c":195},
+    {"i":39,"n":"Escarabajo nadador","e":"Diving beetle","N":496,"S":3079,"h":524032,"p":800,"f":"diving_beetle","l":"En estanques y ríos","r":"Común","c":1200},
+    {"i":40,"n":"Chinche acuática gigante","e":"Giant water bug","N":504,"S":3591,"h":16253183,"p":2000,"f":"giant_water_bug","l":"En estanques y ríos","r":"Rara","c":3000},
+    {"i":41,"n":"Chinche","e":"Stinkbug","N":1020,"S":3855,"h":16777215,"p":120,"f":"stinkbug","l":"En las flores","r":"Común","c":180},
+    {"i":42,"n":"Chinche con rostro humano","e":"Man-faced stink bug","N":1020,"S":3855,"h":16253183,"p":1000,"f":"man-faced_stink_bug","l":"En las flores","r":"Poco común","c":1500},
+    {"i":43,"n":"Mariquita","e":"Ladybug","N":572,"S":3848,"h":130816,"p":200,"f":"ladybug","n2":"Catarina","l":"En las flores","r":"Común","c":300},
+    {"i":44,"n":"Escarabajo tigre","e":"Tiger beetle","N":2046,"S":3983,"h":16777215,"p":1500,"f":"tiger_beetle","l":"En el suelo","r":"Poco común","c":2250},
+    {"i":45,"n":"Escarabajo joya","e":"Jewel beetle","N":248,"S":3075,"h":16777215,"p":2400,"f":"jewel_beetle","l":"En tocones de árbol","r":"Poco común","c":3600},
+    {"i":46,"n":"Escarabajo violín","e":"Violin beetle","N":1840,"S":3100,"h":16777215,"p":450,"f":"violin_beetle","l":"En tocones de árbol","r":"Común","c":675},
+    {"i":47,"n":"Longicornio asiático","e":"Citrus long-horned beetle","N":4095,"S":4095,"h":16777215,"p":350,"f":"citrus_long-horned_beetle","l":"En tocones de árbol","r":"Común","c":525},
+    {"i":48,"n":"Escarabajo rosalia batesi","e":"Rosalia batesi beetle","N":496,"S":3079,"h":16777215,"p":3000,"f":"rosalia_batesi_beetle","l":"En tocones de árbol","r":"Poco común","c":4500},
+    {"i":49,"n":"Gorgojo azul","e":"Blue weevil beetle","N":192,"S":3,"h":16777215,"p":800,"f":"blue_weevil_beetle","l":"En las palmeras","r":"Común","c":1200},
+    {"i":50,"n":"Escarabajo pelotero","e":"Dung beetle","N":2051,"S":224,"h":16777215,"p":3000,"f":"dung_beetle","l":"En el suelo","r":"Común","c":4500},
+    {"i":51,"n":"Escarabajo geotrúpido","e":"Earth-boring dung beetle","N":448,"S":7,"h":16777215,"p":300,"f":"earth-boring_dung_beetle","l":"En el suelo","r":"Común","c":450},
+    {"i":52,"n":"Escarabajo oro","e":"Scarab beetle","N":192,"S":3,"h":8388863,"p":10000,"f":"scarab_beetle","l":"En los árboles","r":"Rara","c":15000},
+    {"i":53,"n":"Escarabajo verde japonés","e":"Drone beetle","N":224,"S":2051,"h":16777215,"p":200,"f":"drone_beetle","l":"En los árboles","r":"Común","c":300},
+    {"i":54,"n":"Goliat","e":"Goliath beetle","N":480,"S":2055,"h":16646399,"p":8000,"f":"goliath_beetle","l":"En las palmeras","r":"Muy rara","c":12000},
+    {"i":55,"n":"Escarabajo ciervo sierra","e":"Saw stag","N":192,"S":3,"h":16777215,"p":2000,"f":"saw_stag","l":"En los árboles","r":"Común","c":3000},
+    {"i":56,"n":"Escarabajo ciervo Miyama","e":"Miyama stag","N":192,"S":3,"h":16777215,"p":1000,"f":"miyama_stag","l":"En los árboles","r":"Común","c":1500},
+    {"i":57,"n":"Escarabajo ciervo gigante","e":"Giant stag","N":192,"S":3,"h":8388863,"p":10000,"f":"giant_stag","l":"En los árboles","r":"Rara","c":15000},
+    {"i":58,"n":"Escarabajo ciervo arcoíris","e":"Rainbow stag","N":480,"S":2055,"h":16253183,"p":6000,"f":"rainbow_stag","l":"En los árboles","r":"Rara","c":9000},
+    {"i":59,"n":"Esc. ciervo cyclommatus","e":"Cyclommatus stag","N":192,"S":3,"h":16646399,"p":8000,"f":"cyclommatus_stag","l":"En las palmeras","r":"Muy rara","c":12000},
+    {"i":60,"n":"Escarabajo ciervo tornasol","e":"Golden stag","N":192,"S":3,"h":16646399,"p":12000,"f":"golden_stag","l":"En las palmeras","r":"Muy rara","c":18000},
+    {"i":61,"n":"Escarabajo ciervo jirafa","e":"Giraffe stag","N":192,"S":3,"h":16646399,"p":12000,"f":"giraffe_stag","l":"En las palmeras","r":"Muy rara","c":18000},
+    {"i":62,"n":"Escarabajo astado japonés","e":"Horned dynastid","N":192,"S":3,"h":16646399,"p":1350,"f":"horned_dynastid","l":"En los árboles","r":"Común","c":2025},
+    {"i":63,"n":"Escarabajo astado atlas","e":"Horned atlas","N":192,"S":3,"h":16646399,"p":8000,"f":"horned_atlas","l":"En las palmeras","r":"Muy rara","c":12000},
+    {"i":64,"n":"Escarabajo astado elefante","e":"Horned elephant","N":192,"S":3,"h":16646399,"p":8000,"f":"horned_elephant","l":"En las palmeras","r":"Muy rara","c":12000},
+    {"i":65,"n":"Escarabajo astado hércules","e":"Horned hercules","N":192,"S":3,"h":16646399,"p":12000,"f":"horned_hercules","l":"En las palmeras","r":"Muy rara","c":18000},
+    {"i":66,"n":"Insecto palo","e":"Walking stick","N":1984,"S":31,"h":393456,"p":600,"f":"walking_stick","l":"En los árboles","r":"Poco común","c":900},
+    {"i":67,"n":"Insecto hoja","e":"Walking leaf","N":448,"S":7,"h":16777215,"p":600,"f":"walking_leaf","l":"Bajo los árboles","r":"Poco común","c":900},
+    {"i":68,"n":"Oruga de bolsón","e":"Bagworm","N":4095,"S":4095,"h":16777215,"p":600,"f":"bagworm","l":"Al sacudir árboles","r":"Común","c":900},
+    {"i":69,"n":"Hormiga","e":"Ant","N":4095,"S":4095,"h":16777215,"p":80,"f":"ant","l":"En fruta podrida","r":"Común","c":120},
+    {"i":70,"n":"Cangrejo ermitaño","e":"Hermit crab","N":4095,"S":4095,"h":16253183,"p":1000,"f":"hermit_crab","l":"En la playa","r":"Común","c":1500},
+    {"i":71,"n":"Cochinilla de arena","e":"Wharf roach","N":4095,"S":4095,"h":16777215,"p":200,"f":"wharf_roach","l":"En las rocas de la playa","r":"Común","c":300},
+    {"i":72,"n":"Mosca","e":"Fly","N":4095,"S":4095,"h":16777215,"p":60,"f":"fly","l":"Cerca de basura","r":"Común","c":90},
+    {"i":73,"n":"Mosquito","e":"Mosquito","N":480,"S":2055,"h":16646159,"p":130,"f":"mosquito","l":"Volando","r":"Común","c":195},
+    {"i":74,"n":"Pulga","e":"Flea","N":2040,"S":3615,"h":16777215,"p":70,"f":"flea","l":"Sobre los vecinos","r":"Común","c":105},
+    {"i":75,"n":"Caracol","e":"Snail","N":4095,"S":4095,"h":16777215,"p":250,"f":"snail","l":"En rocas y arbustos (con lluvia)","r":"Común","c":375},
+    {"i":76,"n":"Cochinilla","e":"Pill bug","N":3903,"S":4092,"h":8454143,"p":250,"f":"pill_bug","l":"Al golpear rocas","r":"Común","c":375},
+    {"i":77,"n":"Ciempiés","e":"Centipede","N":3903,"S":4092,"h":8323072,"p":300,"f":"centipede","l":"Al golpear rocas","r":"Común","c":450},
+    {"i":78,"n":"Araña","e":"Spider","N":4095,"S":4095,"h":16253183,"p":480,"f":"spider","l":"Al sacudir árboles","r":"Común","c":720},
+    {"i":79,"n":"Tarántula","e":"Tarantula","N":3087,"S":1008,"h":16252943,"p":8000,"f":"tarantula","l":"En el suelo","r":"Común","c":12000},
+    {"i":80,"n":"Escorpión","e":"Scorpion","N":1008,"S":3087,"h":16252943,"p":8000,"f":"scorpion","l":"En el suelo","r":"Común","c":12000},
+  ],
+  "sea": [
+    {"i":1,"n":"Alga wakame","e":"Seaweed","N":3711,"S":4089,"h":16777215,"p":600,"f":"seaweed","l":"Buceando en el mar","s":"Grande","v":"Inmóvil"},
+    {"i":2,"n":"Uva de mar","e":"Sea grapes","N":480,"S":2055,"h":16777215,"p":900,"f":"sea_grapes","l":"Buceando en el mar","s":"Pequeña","v":"Inmóvil"},
+    {"i":3,"n":"Pepino de mar","e":"Sea cucumber","N":3087,"S":1008,"h":16777215,"p":500,"f":"sea_cucumber","l":"Buceando en el mar","s":"Mediana","v":"Muy lenta"},
+    {"i":4,"n":"Cerdo de mar","e":"Sea pig","N":3075,"S":240,"h":16712191,"p":10000,"f":"sea_pig","l":"Buceando en el mar","s":"Pequeña","v":"Muy rápida"},
+    {"i":5,"n":"Estrella de mar","e":"Sea star","N":4095,"S":4095,"h":16777215,"p":500,"f":"sea_star","l":"Buceando en el mar","s":"Pequeña","v":"Muy lenta"},
+    {"i":6,"n":"Erizo de mar","e":"Sea urchin","N":496,"S":3079,"h":16777215,"p":1700,"f":"sea_urchin","l":"Buceando en el mar","s":"Pequeña","v":"Lenta"},
+    {"i":7,"n":"Erizo lápiz de pizarra","e":"Slate pencil urchin","N":496,"S":3079,"h":16712191,"p":2000,"f":"slate_pencil_urchin","l":"Buceando en el mar","s":"Mediana","v":"Media"},
+    {"i":8,"n":"Anémona","e":"Sea anemone","N":4095,"S":4095,"h":16777215,"p":500,"f":"sea_anemone","l":"Buceando en el mar","s":"Grande","v":"Inmóvil"},
+    {"i":9,"n":"Medusa luna","e":"Moon jellyfish","N":448,"S":7,"h":16777215,"p":600,"f":"moon_jellyfish","l":"Buceando en el mar","s":"Pequeña","v":"Muy lenta"},
+    {"i":10,"n":"Babosa de mar","e":"Sea slug","N":4095,"S":4095,"h":16777215,"p":600,"f":"sea_slug","l":"Buceando en el mar","s":"Muy pequeña","v":"Muy lenta"},
+    {"i":11,"n":"Ostra perlera","e":"Pearl oyster","N":4095,"S":4095,"h":16777215,"p":2800,"f":"pearl_oyster","l":"Buceando en el mar","s":"Pequeña","v":"Media"},
+    {"i":12,"n":"Mejillón","e":"Mussel","N":4064,"S":2111,"h":16777215,"p":1500,"f":"mussel","l":"Buceando en el mar","s":"Pequeña","v":"Lenta"},
+    {"i":13,"n":"Ostra","e":"Oyster","N":3843,"S":252,"h":16777215,"p":1100,"f":"oyster","l":"Buceando en el mar","s":"Pequeña","v":"Lenta"},
+    {"i":14,"n":"Vieira","e":"Scallop","N":4095,"S":4095,"h":16777215,"p":1200,"f":"scallop","l":"Buceando en el mar","s":"Mediana","v":"Lenta"},
+    {"i":15,"n":"Buccino","e":"Whelk","N":4095,"S":4095,"h":16777215,"p":1000,"f":"whelk","l":"Buceando en el mar","s":"Pequeña","v":"Lenta"},
+    {"i":16,"n":"Caracola espinosa","e":"Turban shell","N":3868,"S":1852,"h":16777215,"p":1000,"f":"turban_shell","l":"Buceando en el mar","s":"Pequeña","v":"Lenta"},
+    {"i":17,"n":"Abulón","e":"Abalone","N":4065,"S":2171,"h":16712191,"p":2000,"f":"abalone","l":"Buceando en el mar","s":"Mediana","v":"Media"},
+    {"i":18,"n":"Taclobo gigante","e":"Gigas giant clam","N":496,"S":3079,"h":16777215,"p":15000,"f":"gigas_giant_clam","l":"Buceando en el mar","s":"Muy grande","v":"Muy rápida"},
+    {"i":19,"n":"Nautilo","e":"Chambered nautilus","N":1852,"S":3868,"h":16712191,"p":1800,"f":"chambered_nautilus","l":"Buceando en el mar","s":"Mediana","v":"Media"},
+    {"i":20,"n":"Pulpo","e":"Octopus","N":4095,"S":4095,"h":16777215,"p":1200,"f":"octopus","l":"Buceando en el mar","s":"Mediana","v":"Lenta"},
+    {"i":21,"n":"Pulpo paraguas","e":"Umbrella octopus","N":1820,"S":1820,"h":16777215,"p":6000,"f":"umbrella_octopus","l":"Buceando en el mar","s":"Pequeña","v":"Rápida"},
+    {"i":22,"n":"Calamar vampiro","e":"Vampire squid","N":240,"S":3075,"h":16712191,"p":10000,"f":"vampire_squid","l":"Buceando en el mar","s":"Mediana","v":"Muy rápida"},
+    {"i":23,"n":"Calamar luciérnaga","e":"Firefly squid","N":60,"S":3840,"h":14680079,"p":1400,"f":"firefly_squid","l":"Buceando en el mar","s":"Muy pequeña","v":"Lenta"},
+    {"i":24,"n":"Cangrejo gazami","e":"Gazami crab","N":2016,"S":2079,"h":16777215,"p":2200,"f":"gazami_crab","l":"Buceando en el mar","s":"Mediana","v":"Media"},
+    {"i":25,"n":"Buey del Pacífico","e":"Dungeness crab","N":3103,"S":2032,"h":16777215,"p":1900,"f":"dungeness_crab","l":"Buceando en el mar","s":"Mediana","v":"Media"},
+    {"i":26,"n":"Cangrejo de nieve","e":"Snow crab","N":3087,"S":1008,"h":16777215,"p":6000,"f":"snow_crab","l":"Buceando en el mar","s":"Grande","v":"Rápida"},
+    {"i":27,"n":"Cangrejo boreal","e":"Red king crab","N":3079,"S":496,"h":16777215,"p":8000,"f":"red_king_crab","l":"Buceando en el mar","s":"Grande","v":"Muy rápida"},
+    {"i":28,"n":"Bellota de mar","e":"Acorn barnacle","N":4095,"S":4095,"h":16777215,"p":600,"f":"acorn_barnacle","l":"Buceando en el mar","s":"Muy pequeña","v":"Inmóvil"},
+    {"i":29,"n":"Cangrejo gigante japonés","e":"Spider crab","N":12,"S":768,"h":16777215,"p":12000,"f":"spider_crab","l":"Buceando en el mar","s":"Muy grande","v":"Muy rápida"},
+    {"i":30,"n":"Langostino tigre","e":"Tiger prawn","N":480,"S":2055,"h":16712191,"p":3000,"f":"tiger_prawn","l":"Buceando en el mar","s":"Pequeña","v":"Media"},
+    {"i":31,"n":"Camarón boreal","e":"Sweet shrimp","N":3843,"S":252,"h":16712191,"p":1400,"f":"sweet_shrimp","l":"Buceando en el mar","s":"Pequeña","v":"Lenta"},
+    {"i":32,"n":"Langosta mantis","e":"Mantis shrimp","N":4095,"S":4095,"h":16712191,"p":2500,"f":"mantis_shrimp","l":"Buceando en el mar","s":"Pequeña","v":"Media"},
+    {"i":33,"n":"Langosta espinosa","e":"Spiny lobster","N":3584,"S":56,"h":14680079,"p":5000,"f":"spiny_lobster","l":"Buceando en el mar","s":"Grande","v":"Rápida"},
+    {"i":34,"n":"Bogavante","e":"Lobster","N":2105,"S":3680,"h":16777215,"p":4500,"f":"lobster","l":"Buceando en el mar","s":"Grande","v":"Rápida"},
+    {"i":35,"n":"Isópodo gigante","e":"Giant isopod","N":960,"S":15,"h":14745103,"p":12000,"f":"giant_isopod","l":"Buceando en el mar","s":"Mediana","v":"Muy rápida"},
+    {"i":36,"n":"Cangrejo herradura","e":"Horseshoe crab","N":448,"S":7,"h":14680079,"p":2500,"f":"horseshoe_crab","l":"Buceando en el mar","s":"Mediana","v":"Media"},
+    {"i":37,"n":"Piña de mar","e":"Sea pineapple","N":248,"S":3587,"h":16777215,"p":1500,"f":"sea_pineapple","l":"Buceando en el mar","s":"Pequeña","v":"Lenta"},
+    {"i":38,"n":"Anguila jardinera","e":"Spotted garden eel","N":1008,"S":3087,"h":2097136,"p":1100,"f":"spotted_garden_eel","l":"Buceando en el mar","s":"Pequeña","v":"Lenta"},
+    {"i":39,"n":"Gusano políclado","e":"Flatworm","N":384,"S":6,"h":16712191,"p":700,"f":"flatworm","l":"Buceando en el mar","s":"Muy pequeña","v":"Muy lenta"},
+    {"i":40,"n":"Canasta de flores de Venus","e":"Venus' flower basket","N":3587,"S":248,"h":16777215,"p":5000,"f":"venus_flower_basket","l":"Buceando en el mar","s":"Mediana","v":"Rápida"},
+  ],
+};
+
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════
+   Cuaderno de Isla — lógica
+   Los meses y las horas se guardan como máscaras de bits:
+   mes 1 = bit 0 … mes 12 = bit 11 · hora 0 = bit 0 … hora 23 = bit 23
+   ═══════════════════════════════════════════════════════════ */
+
+const CATS = {
+  fish: { nombre: 'Peces',             corto: 'Peces',    singular: 'pez',             total: 80, color: 'var(--cielo)' },
+  bugs: { nombre: 'Bichos',            corto: 'Bichos',   singular: 'bicho',           total: 80, color: 'var(--hoja)' },
+  sea:  { nombre: 'Criaturas marinas', corto: 'Marinas',  singular: 'criatura marina', total: 40, color: 'var(--ciruela)' },
+};
+const ORDEN = ['fish', 'bugs', 'sea'];
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const INICIALES = ['E','F','M','A','M','J','J','A','S','O','N','D'];
+const TODO_EL_DIA = 0xFFFFFF;
+
+/* ── Guardado (localStorage, con respaldo en memoria) ────── */
+const Guardado = (() => {
+  let ok = true;
+  try { localStorage.setItem('__t', '1'); localStorage.removeItem('__t'); }
+  catch (e) { ok = false; }
+  const memoria = {};
+  return {
+    leer(k, x) {
+      try { const v = ok ? localStorage.getItem(k) : memoria[k]; return v ? JSON.parse(v) : x; }
+      catch (e) { return x; }
+    },
+    escribir(k, v) {
+      const s = JSON.stringify(v);
+      try { ok ? localStorage.setItem(k, s) : (memoria[k] = s); } catch (e) { memoria[k] = s; }
+    },
+    persistente: ok,
+  };
+})();
+
+/* ── Estado ─────────────────────────────────────────────── */
+let perfiles = Guardado.leer('isla.perfiles', []);
+let activoId = Guardado.leer('isla.activo', null);
+let vista = 'ahora';
+let momento = null;                 // {mes, hora} si el usuario mira otro momento
+let fAhora = 'faltan';
+let fCat = 'todos', fEstado = 'todos', consulta = '';
+let editandoId = null, hemiForm = 'N';
+let abierto = null;                 // {cat, id} de la ficha abierta
+
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const perfil = () => perfiles.find(p => p.id === activoId) || null;
+
+function guardar() {
+  Guardado.escribir('isla.perfiles', perfiles);
+  Guardado.escribir('isla.activo', activoId);
+}
+
+/* ── Tiempo ─────────────────────────────────────────────── */
+const ahora = () => {
+  if (momento) return momento;
+  const d = new Date();
+  return { mes: d.getMonth() + 1, hora: d.getHours(), min: d.getMinutes() };
+};
+const mesOn  = (mask, m) => (mask >> (m - 1)) & 1;
+const horaOn = (mask, h) => (mask >> h) & 1;
+const mesesDe = (c, hemi) => (hemi === 'S' ? c.S : c.N);
+
+function disponible(c, hemi, t) {
+  return !!(mesOn(mesesDe(c, hemi), t.mes) && horaOn(c.h, t.hora));
+}
+/** Horas seguidas que quedan antes de que se cierre la ventana (24 = todo el día). */
+function horasRestantes(c, t) {
+  if (c.h === TODO_EL_DIA) return 24;
+  let n = 0;
+  for (let i = 0; i < 24; i++) {
+    if (!horaOn(c.h, (t.hora + i) % 24)) break;
+    n++;
+  }
+  return n;
+}
+const esUltimoMes = (c, hemi, t) => {
+  const m = mesesDe(c, hemi);
+  return !!mesOn(m, t.mes) && !mesOn(m, t.mes % 12 + 1);
+};
+const esNuevoEsteMes = (c, hemi, t) => {
+  const m = mesesDe(c, hemi);
+  return !!mesOn(m, t.mes) && !mesOn(m, t.mes === 1 ? 12 : t.mes - 1);
+};
+
+function franja(h) {
+  if (h < 6)  return 'madrugada';
+  if (h < 12) return 'mañana';
+  if (h < 20) return 'tarde';
+  return 'noche';
+}
+
+/* Ambiente: el fondo sigue la hora de la isla */
+const AMBIENTES = [
+  { h: 0,  c: '#DDE3F6' },   // madrugada: lavanda
+  { h: 5,  c: '#FBE0CE' },   // amanecer: durazno
+  { h: 8,  c: '#D3EEF9' },   // día: cielo
+  { h: 12, c: '#E2F3D2' },   // mediodía: verde claro
+  { h: 17, c: '#FBDCE4' },   // atardecer: rosa
+  { h: 20, c: '#DDE3F6' },   // noche
+];
+function pintarAmbiente(h) {
+  let a = AMBIENTES[0];
+  for (const x of AMBIENTES) if (h >= x.h) a = x;
+  document.documentElement.style.setProperty('--amb', a.c);
+}
+
+/* ── Iconos ─────────────────────────────────────────────────
+   Si existe la carpeta iconos/ junto a index.html, cada criatura
+   muestra su dibujo. Si no está, la imagen se retira sola y la app
+   se ve exactamente igual que sin ella. Ver el README.
+   ─────────────────────────────────────────────────────────── */
+const CARPETA_ICONOS = 'iconos';
+let HAY_ICONOS = false;
+
+const iconoHTML = (cat, c, clase) => HAY_ICONOS
+  ? `<img class="${clase}" src="${CARPETA_ICONOS}/${cat}/${c.f}.png" alt="" loading="lazy" onerror="this.remove()">`
+  : '';
+
+/** Pide una sola imagen de prueba. Si llega, la app pinta todos los dibujos. */
+function buscarIconos() {
+  const prueba = new Image();
+  prueba.onload = () => { HAY_ICONOS = true; render(); };
+  prueba.src = `${CARPETA_ICONOS}/fish/${DATOS.fish[0].f}.png`;
+}
+
+/* ── Utilidades ─────────────────────────────────────────── */
+/** Quita tildes y pasa a minúsculas: "Tiburón" y "tiburon" buscan igual. */
+const sinTildes = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+for (const cat of ORDEN) {
+  for (const c of DATOS[cat]) c.k = sinTildes(`${c.n} ${c.e} ${c.n2 || ''} ${c.l}`);
+}
+const esc = s => String(s).replace(/[&<>"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
+const bells = n => n.toLocaleString('es-ES');
+const capturados = cat => (perfil()?.capturados?.[cat]) || [];
+const tiene = (cat, id) => capturados(cat).includes(id);
+
+function alternar(cat, id) {
+  const p = perfil(); if (!p) return;
+  p.capturados[cat] = p.capturados[cat] || [];
+  const i = p.capturados[cat].indexOf(id);
+  i === -1 ? p.capturados[cat].push(id) : p.capturados[cat].splice(i, 1);
+  guardar();
+  if (navigator.vibrate) navigator.vibrate(8);
+  render();
+}
+
+function metaDe(cat, c) {
+  const partes = [c.l];
+  if (cat === 'fish' && c.s) partes.push(c.s);
+  if (cat === 'sea') { if (c.s) partes.push(c.s); if (c.v) partes.push(c.v); }
+  return partes.join(' · ');
+}
+
+/** Etiqueta corta más urgente para una fila. */
+function etiquetaDe(cat, c, hemi, t) {
+  const disp = disponible(c, hemi, t);
+  if (disp) {
+    const q = horasRestantes(c, t);
+    if (q <= 2) return `<span class="tag urgente">${q === 1 ? 'última hora' : '2 h'}</span>`;
+    if (esUltimoMes(c, hemi, t)) return '<span class="tag ultimo">último mes</span>';
+    if (esNuevoEsteMes(c, hemi, t)) return '<span class="tag nuevo">nuevo</span>';
+    return '';
+  }
+  if (mesOn(mesesDe(c, hemi), t.mes)) return '<span class="tag fuera">otra hora</span>';
+  return '<span class="tag fuera">otro mes</span>';
+}
+
+function filaHTML(cat, c, hemi, t, conEtiqueta = true) {
+  const hecho = tiene(cat, c.i);
+  return `<div class="fila${hecho ? ' hecho' : ''}">
+    <button class="marca" data-marcar="${cat}:${c.i}" aria-label="${hecho ? 'Quitar de' : 'Añadir a'} capturados: ${esc(c.n)}" aria-pressed="${hecho}">✓</button>
+    <button class="abrir" data-abrir="${cat}:${c.i}">
+      ${iconoHTML(cat, c, 'foto')}
+      <span class="cuerpo">
+        <span class="nom">${esc(c.n)}</span>
+        <span class="meta">${esc(metaDe(cat, c))}</span>
+      </span>
+      <span class="der">
+        <span class="precio">${bells(c.p)}</span>
+        ${conEtiqueta ? etiquetaDe(cat, c, hemi, t) : ''}
+      </span>
+    </button>
+  </div>`;
+}
+
+function seccionHTML(cat, items, hemi, t, etiquetas = true) {
+  if (!items.length) return '';
+  return `<div class="seccion ${cat}">
+    <div class="seccion-cab">
+      <span class="etq">${CATS[cat].nombre}</span>
+      <span class="linea"></span>
+      <span class="cuenta">${items.length}</span>
+    </div>
+    <div class="lista">${items.map(c => filaHTML(cat, c, hemi, t, etiquetas)).join('')}</div>
+  </div>`;
+}
+
+/* ═══ VISTA: AHORA ═══════════════════════════════════════ */
+function renderAhora() {
+  const p = perfil();
+  const t = ahora();
+  pintarAmbiente(t.hora);
+
+  if (!p) {
+    $('#ahora-sub').textContent = '';
+    $('#faltan-hoy').classList.add('oculto');
+    $('#avisos').innerHTML = '';
+    $('#ahora-listas').innerHTML = `<div class="vacio"><span class="cara">🌱</span><b>Todavía no hay ningún perfil</b>
+      Crea uno con el nombre de tu personaje y tu hemisferio para empezar a registrar capturas.</div>`;
+    return;
+  }
+  $('#faltan-hoy').classList.remove('oculto');
+  const hemi = p.hemisferio;
+
+  $('#ahora-sub').innerHTML = `<b>${MESES[t.mes - 1]}</b>, ${franja(t.hora)} · hemisferio ${hemi === 'N' ? 'norte' : 'sur'}`;
+
+  // Qué hay disponible, separado en lo que falta y lo que ya está
+  const disp = {}, faltan = {};
+  let nFaltan = 0, nDisp = 0;
+  for (const cat of ORDEN) {
+    disp[cat] = DATOS[cat].filter(c => disponible(c, hemi, t));
+    faltan[cat] = disp[cat].filter(c => !tiene(cat, c.i));
+    nDisp += disp[cat].length;
+    nFaltan += faltan[cat].length;
+  }
+
+  const caja = $('#faltan-hoy');
+  caja.classList.toggle('completo', nFaltan === 0);
+  caja.querySelector('.n').textContent = nFaltan;
+  caja.querySelector('.d').textContent = nFaltan === 0
+    ? `Ya tienes las ${nDisp} criaturas que se pueden cazar en este momento.`
+    : nFaltan === 1 ? 'criatura disponible que aún no tienes'
+                    : 'criaturas disponibles que aún no tienes';
+
+  // Avisos: lo que se acaba
+  const avisos = [];
+  const cierran = ORDEN.flatMap(cat => faltan[cat].filter(c => horasRestantes(c, t) <= 2).map(c => c.n));
+  const ultimoMes = ORDEN.flatMap(cat =>
+    DATOS[cat].filter(c => !tiene(cat, c.i) && esUltimoMes(c, hemi, t)).map(c => c.n));
+
+  if (cierran.length) avisos.push(`<div class="aviso"><span class="ic">⏳</span><div>
+    <b>Se cierra la ventana</b> — ${esc(cierran.slice(0, 4).join(', '))}${cierran.length > 4 ? ` y ${cierran.length - 4} más` : ''} ${cierran.length === 1 ? 'deja' : 'dejan'} de aparecer en menos de dos horas.</div></div>`);
+  if (ultimoMes.length) avisos.push(`<div class="aviso suave"><span class="ic">📅</span><div>
+    <b>Último mes</b> — ${ultimoMes.length} ${ultimoMes.length === 1 ? 'criatura se va' : 'criaturas se van'} a final de ${MESES[t.mes - 1]}: ${esc(ultimoMes.slice(0, 5).join(', '))}${ultimoMes.length > 5 ? '…' : ''}</div></div>`);
+  if (!avisos.length && nFaltan > 0) avisos.push(`<div class="aviso calma"><span class="ic">🌿</span><div>
+    Nada se va este mes. Puedes cazar con calma.</div></div>`);
+  $('#avisos').innerHTML = avisos.join('');
+
+  // Listas
+  const fuente = fAhora === 'faltan' ? faltan : disp;
+  const html = ORDEN.map(cat => seccionHTML(cat, fuente[cat], hemi, t)).join('');
+  $('#ahora-listas').innerHTML = html || `<div class="vacio"><span class="cara">🍃</span><b>Nada por aquí</b>
+    ${fAhora === 'faltan' ? 'No te falta ninguna criatura de las que salen ahora mismo.' : 'A esta hora no aparece nada. Prueba con otro momento del día.'}</div>`;
+}
+
+/* ═══ VISTA: CATÁLOGO ════════════════════════════════════ */
+function renderCatalogo() {
+  const p = perfil();
+  const t = ahora();
+  const hemi = p ? p.hemisferio : 'N';
+  const q = sinTildes(consulta.trim());
+
+  const cats = fCat === 'todos' ? ORDEN : [fCat];
+  const html = cats.map(cat => {
+    let items = DATOS[cat];
+    if (q) items = items.filter(c => c.k.includes(q));
+    if (fEstado === 'faltan') items = items.filter(c => !tiene(cat, c.i));
+    if (fEstado === 'tengo')  items = items.filter(c =>  tiene(cat, c.i));
+    if (fEstado === 'ahora')  items = items.filter(c => disponible(c, hemi, t));
+    return seccionHTML(cat, items, hemi, t);
+  }).join('');
+
+  $('#catalogo-listas').innerHTML = html || `<div class="vacio"><span class="cara">🔎</span><b>Sin resultados</b>
+    ${q ? `Nada coincide con “${esc(consulta)}”. Prueba con el nombre en inglés.` : 'Ningún bicho cumple estos filtros.'}</div>`;
+}
+
+/* ═══ VISTA: MUSEO ═══════════════════════════════════════ */
+function anilloHTML(cat) {
+  const n = capturados(cat).length, tot = CATS[cat].total;
+  const R = 24, C = 2 * Math.PI * R;
+  const off = C * (1 - n / tot);
+  return `<div class="anillo">
+    <svg width="62" height="62" viewBox="0 0 62 62">
+      <circle cx="31" cy="31" r="${R}" fill="none" stroke="var(--arena-2)" stroke-width="6"/>
+      <circle cx="31" cy="31" r="${R}" fill="none" stroke="${CATS[cat].color}" stroke-width="6"
+        stroke-linecap="round" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}"
+        transform="rotate(-90 31 31)"/>
+    </svg>
+    <span class="etq">${CATS[cat].corto}</span>
+    <div class="n">${n}<small>/${tot}</small></div>
+  </div>`;
+}
+
+function renderMuseo() {
+  const p = perfil();
+  const t = ahora();
+  const total = ORDEN.reduce((s, c) => s + capturados(c).length, 0);
+  const pct = Math.round(total / 200 * 100);
+
+  $('#museo-sub').textContent = p
+    ? `Registro de ${p.nombre}.`
+    : 'Crea un perfil para empezar a llenar el museo.';
+  $('#pct-total').textContent = pct + '%';
+  $('#txt-total').textContent = `${total} / 200`;
+  $('#pista-total').innerHTML = ORDEN.map(cat =>
+    `<i style="width:${capturados(cat).length / 200 * 100}%;background:${CATS[cat].color}"></i>`).join('');
+  $('#anillos').innerHTML = ORDEN.map(anilloHTML).join('');
+
+  if (!p) { $('#museo-listas').innerHTML = ''; $('#cuenta-mes').textContent = '0'; return; }
+
+  const hemi = p.hemisferio;
+  let n = 0;
+  const html = ORDEN.map(cat => {
+    const items = DATOS[cat]
+      .filter(c => !tiene(cat, c.i) && mesOn(mesesDe(c, hemi), t.mes))
+      .sort((a, b) => (esUltimoMes(b, hemi, t) - esUltimoMes(a, hemi, t)) || a.n.localeCompare(b.n, 'es'));
+    n += items.length;
+    return seccionHTML(cat, items, hemi, t);
+  }).join('');
+  $('#cuenta-mes').textContent = n;
+  $('#museo-listas').innerHTML = html || `<div class="vacio"><span class="cara">🏆</span><b>Mes completo</b>
+    No te falta nada de lo que aparece en ${MESES[t.mes - 1]}.</div>`;
+}
+
+/* ═══ VISTA: PERFILES ════════════════════════════════════ */
+function renderPerfiles() {
+  const lista = $('#lista-perfiles');
+  if (!perfiles.length) {
+    if (!$('#form-perfil').classList.contains('oculto')) { lista.innerHTML = ''; return; }
+    lista.innerHTML = `<div class="vacio"><span class="cara">🌱</span><b>Sin perfiles todavía</b>
+      Cada perfil guarda su hemisferio y su propio registro de capturas.</div>`;
+    return;
+  }
+  lista.innerHTML = perfiles.map(p => {
+    const n = ORDEN.reduce((s, c) => s + (p.capturados[c] || []).length, 0);
+    return `<div class="perfil-fila${p.id === activoId ? ' activo' : ''}">
+      <button class="abrir" data-usar="${p.id}" style="gap:13px">
+        <span class="ini">${esc(p.nombre.slice(0, 2).toUpperCase())}</span>
+        <span class="cuerpo">
+          <span class="nom">${esc(p.nombre)}</span>
+          <span class="meta">Hemisferio ${p.hemisferio === 'N' ? 'norte' : 'sur'} · ${n}/200</span>
+        </span>
+      </button>
+      <button class="btn-texto" data-editar="${p.id}" style="flex:0 0 auto">Editar</button>
+    </div>`;
+  }).join('');
+}
+
+function abrirForm(id) {
+  editandoId = id || null;
+  const p = id ? perfiles.find(x => x.id === id) : null;
+  hemiForm = p ? p.hemisferio : 'N';
+  $('#in-nombre').value = p ? p.nombre : '';
+  $('#form-titulo').textContent = p ? 'Editar perfil' : 'Nuevo perfil';
+  $('#btn-borrar-perfil').classList.toggle('oculto', !p);
+  $$('[data-hemi]').forEach(b => b.setAttribute('aria-pressed', b.dataset.hemi === hemiForm));
+  $('#form-perfil').classList.remove('oculto');
+  $('#btn-nuevo-perfil').classList.add('oculto');
+  $('#in-nombre').focus();
+}
+function cerrarForm() {
+  $('#form-perfil').classList.add('oculto');
+  $('#btn-nuevo-perfil').classList.remove('oculto');
+  editandoId = null;
+}
+function guardarPerfil() {
+  const nombre = $('#in-nombre').value.trim();
+  if (!nombre) { $('#in-nombre').focus(); return; }
+  if (editandoId) {
+    const p = perfiles.find(x => x.id === editandoId);
+    p.nombre = nombre; p.hemisferio = hemiForm;
+  } else {
+    const p = { id: Date.now().toString(36), nombre, hemisferio: hemiForm, capturados: { fish: [], bugs: [], sea: [] } };
+    perfiles.push(p);
+    activoId = p.id;
+  }
+  guardar(); cerrarForm(); render();
+}
+function borrarPerfil() {
+  const p = perfiles.find(x => x.id === editandoId);
+  if (!p) return;
+  if (!confirm(`¿Borrar el perfil de ${p.nombre} y todo su registro? No se puede deshacer.`)) return;
+  perfiles = perfiles.filter(x => x.id !== editandoId);
+  if (activoId === editandoId) activoId = perfiles[0]?.id || null;
+  guardar(); cerrarForm(); render();
+}
+
+/* ═══ FICHA ══════════════════════════════════════════════ */
+function bandaMeses(c, hemi, t) {
+  const m = mesesDe(c, hemi);
+  const seg = INICIALES.map((ini, i) =>
+    `<span class="s${mesOn(m, i + 1) ? ' on' : ''}${i + 1 === t.mes ? ' ahora' : ''}"></span>`).join('');
+  const eje = INICIALES.map((i, x) => `<span${x + 1 === t.mes ? ' class="ahora"' : ''}>${i}</span>`).join('');
+  return `<div class="banda">${seg}</div><div class="banda-eje">${eje}</div>`;
+}
+function bandaHoras(c, t) {
+  let seg = '', eje = '';
+  for (let h = 0; h < 24; h++) {
+    seg += `<span class="s${horaOn(c.h, h) ? ' on' : ''}${h === t.hora ? ' ahora' : ''}"></span>`;
+    eje += `<span${h === t.hora ? ' class="ahora"' : ''}>${h % 6 === 0 || h === t.hora ? h : ''}</span>`;
+  }
+  return `<div class="banda horas">${seg}</div><div class="banda-eje">${eje}</div>`;
+}
+
+function abrirFicha(cat, id) {
+  const c = DATOS[cat].find(x => x.i === id); if (!c) return;
+  const scroll = (abierto && abierto.id === id && abierto.cat === cat) ? $('#hoja').scrollTop : 0;
+  abierto = { cat, id };
+  const p = perfil(), hemi = p ? p.hemisferio : 'N', t = ahora();
+  const hecho = tiene(cat, id);
+  const disp = disponible(c, hemi, t);
+  const q = horasRestantes(c, t);
+
+  let estado;
+  if (disp && q <= 2) estado = `<span class="tag urgente">Se va en ${q === 1 ? '1 hora' : '2 horas'}</span>`;
+  else if (disp)      estado = `<span class="tag viva">Disponible ahora</span>`;
+  else if (mesOn(mesesDe(c, hemi), t.mes)) estado = `<span class="tag fuera">Este mes sí, a esta hora no</span>`;
+  else                estado = `<span class="tag fuera">No aparece en ${MESES[t.mes - 1]}</span>`;
+
+  const vendedor = cat === 'bugs' ? 'Flick' : 'C.J.';
+  $('#hoja').innerHTML = `
+    <div class="asa"></div>
+    <div class="titulo">
+      ${iconoHTML(cat, c, 'retrato')}
+      <div>
+        <h2>${esc(c.n)}</h2>
+        <p class="en">${esc(c.e)} · ${CATS[cat].singular} nº ${c.i}</p>
+      </div>
+    </div>
+    <div class="estado">${estado}</div>
+
+    <div class="ficha">
+      <div><span class="etq k">Precio en Nook</span><span class="v">${bells(c.p)} <i>bayas</i></span></div>
+      ${c.c ? `<div><span class="etq k">Precio con ${vendedor}</span><span class="v">${bells(c.c)} <i>bayas</i></span></div>` : ''}
+      <div class="ancho"><span class="etq k">Dónde aparece</span><span class="v">${esc(c.l)}</span></div>
+      ${c.s ? `<div><span class="etq k">Sombra</span><span class="v">${esc(c.s)}</span></div>` : ''}
+      ${c.v ? `<div><span class="etq k">Velocidad</span><span class="v">${esc(c.v)}</span></div>` : ''}
+      ${c.r ? `<div><span class="etq k">Rareza</span><span class="v">${esc(c.r)}</span></div>` : ''}
+    </div>
+
+    <div class="bloque">
+      <span class="etq">Meses · hemisferio ${hemi === 'N' ? 'norte' : 'sur'}</span>
+      ${bandaMeses(c, hemi, t)}
+    </div>
+    <div class="bloque">
+      <span class="etq">Horas del día</span>
+      ${bandaHoras(c, t)}
+    </div>
+
+    <button id="btn-marcar" class="${hecho ? 'hecho' : ''}" data-marcar="${cat}:${c.i}">
+      ${hecho ? '✓ Ya lo tienes — quitar del registro' : 'Marcar como capturado'}
+    </button>`;
+  $('#hoja').classList.add('on');
+  $('#velo').classList.add('on');
+  $('#hoja').scrollTop = scroll;
+}
+function cerrarFicha() {
+  abierto = null;
+  $('#hoja').classList.remove('on');
+  $('#velo').classList.remove('on');
+}
+
+/* ═══ RENDER GENERAL ═════════════════════════════════════ */
+function render() {
+  const p = perfil();
+  const chip = $('#chip-perfil');
+  chip.querySelector('.ini').textContent = p ? p.nombre.slice(0, 2).toUpperCase() : '—';
+  chip.querySelector('.txt').textContent = p ? p.nombre : 'Crear perfil';
+
+  const t = ahora();
+  const hh = String(t.hora).padStart(2, '0');
+  const mm = String(t.min ?? 0).padStart(2, '0');
+  $('#reloj .t').textContent = momento ? `${hh}:00` : `${hh}:${mm}`;
+  $('#reloj').classList.toggle('editado', !!momento);
+
+  renderAhora(); renderCatalogo(); renderMuseo(); renderPerfiles();
+  if (abierto) abrirFicha(abierto.cat, abierto.id);
+}
+
+function irA(v) {
+  vista = v;
+  $$('.vista').forEach(s => s.classList.toggle('on', s.id === 'v-' + v));
+  $$('nav button').forEach(b => b.setAttribute('aria-selected', b.dataset.vista === v));
+  window.scrollTo({ top: 0 });
+}
+
+/* ═══ EVENTOS ════════════════════════════════════════════ */
+document.addEventListener('click', e => {
+  const t = e.target;
+
+  const nav = t.closest('nav button');           if (nav) return irA(nav.dataset.vista);
+  if (t.closest('#chip-perfil')) return irA('perfiles');
+
+  const marcar = t.closest('[data-marcar]');
+  if (marcar) { const [c, i] = marcar.dataset.marcar.split(':'); return alternar(c, +i); }
+
+  const abrir = t.closest('[data-abrir]');
+  if (abrir) { const [c, i] = abrir.dataset.abrir.split(':'); return abrirFicha(c, +i); }
+
+  if (t.closest('#velo')) return cerrarFicha();
+
+  const fa = t.closest('[data-f-ahora]');
+  if (fa) { fAhora = fa.dataset.fAhora; $$('[data-f-ahora]').forEach(b => b.setAttribute('aria-pressed', b === fa)); return renderAhora(); }
+
+  const fc = t.closest('[data-cat]');
+  if (fc) { fCat = fc.dataset.cat; $$('[data-cat]').forEach(b => b.setAttribute('aria-pressed', b === fc)); return renderCatalogo(); }
+
+  const fe = t.closest('[data-estado]');
+  if (fe) { fEstado = fe.dataset.estado; $$('[data-estado]').forEach(b => b.setAttribute('aria-pressed', b === fe)); return renderCatalogo(); }
+
+  if (t.closest('#btn-momento')) {
+    const abiertoP = !$('#panel-momento').classList.toggle('oculto');
+    $('#btn-momento').setAttribute('aria-pressed', abiertoP);
+    return;
+  }
+  if (t.closest('#btn-reset-momento')) { momento = null; sincronizarSelectores(); return render(); }
+
+  const usar = t.closest('[data-usar]');
+  if (usar) { activoId = usar.dataset.usar; guardar(); render(); return irA('ahora'); }
+
+  const ed = t.closest('[data-editar]');       if (ed) return abrirForm(ed.dataset.editar);
+  if (t.closest('#btn-nuevo-perfil'))          return abrirForm(null);
+  if (t.closest('#btn-guardar-perfil'))        return guardarPerfil();
+  if (t.closest('#btn-cancelar-perfil'))       return cerrarForm();
+  if (t.closest('#btn-borrar-perfil'))         return borrarPerfil();
+
+  const hemi = t.closest('[data-hemi]');
+  if (hemi) { hemiForm = hemi.dataset.hemi; $$('[data-hemi]').forEach(b => b.setAttribute('aria-pressed', b === hemi)); return; }
+
+  if (t.closest('#btn-exportar')) return exportar();
+  if (t.closest('#btn-importar')) return $('#file-importar').click();
+});
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && abierto) cerrarFicha(); });
+
+$('#q').addEventListener('input', e => { consulta = e.target.value; renderCatalogo(); });
+
+$('#sel-mes').addEventListener('change', cambiarMomento);
+$('#sel-hora').addEventListener('change', cambiarMomento);
+function cambiarMomento() {
+  momento = { mes: +$('#sel-mes').value, hora: +$('#sel-hora').value, min: 0 };
+  render();
+}
+function sincronizarSelectores() {
+  const t = ahora();
+  $('#sel-mes').value = t.mes;
+  $('#sel-hora').value = t.hora;
+}
+
+/* ── Copia de seguridad ─────────────────────────────────── */
+function exportar() {
+  const datos = { app: 'cuaderno-de-isla', version: 1, fecha: new Date().toISOString(), perfiles };
+  const url = URL.createObjectURL(new Blob([JSON.stringify(datos, null, 2)], { type: 'application/json' }));
+  const a = document.createElement('a');
+  a.href = url; a.download = 'cuaderno-de-isla.json'; a.click();
+  URL.revokeObjectURL(url);
+}
+$('#file-importar').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  const lector = new FileReader();
+  lector.onload = () => {
+    try {
+      const d = JSON.parse(lector.result);
+      if (!Array.isArray(d.perfiles)) throw 0;
+      if (!confirm(`El archivo tiene ${d.perfiles.length} perfil(es). Esto reemplaza lo que hay ahora. ¿Seguimos?`)) return;
+      perfiles = d.perfiles;
+      activoId = perfiles[0]?.id || null;
+      guardar(); render(); irA('museo');
+    } catch (err) {
+      alert('Ese archivo no tiene el formato del cuaderno. Usa el que genera el botón de descarga.');
+    }
+  };
+  lector.readAsText(f);
+  e.target.value = '';
+});
+
+/* ═══ ARRANQUE ═══════════════════════════════════════════ */
+(function iniciar() {
+  $('#sel-mes').innerHTML  = MESES.map((m, i) => `<option value="${i + 1}">${m}</option>`).join('');
+  $('#sel-hora').innerHTML = Array.from({ length: 24 }, (_, h) =>
+    `<option value="${h}">${String(h).padStart(2, '0')}:00</option>`).join('');
+  sincronizarSelectores();
+
+  render();
+  buscarIconos();
+  if (!perfiles.length) irA('perfiles');
+
+  // El reloj de la cabecera y las ventanas se refrescan solos
+  setInterval(() => { if (!momento) render(); }, 30000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && !momento) render(); });
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  }
+})();
+
+</script>
+</body>
+</html>
